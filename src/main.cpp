@@ -27,6 +27,7 @@ int main() {
   string text;
   bool space = false;
   while (getline(ifile, text)) {
+    // Antisipasi kalau txt CLRF
     if(text[text.length()-1]=='\r'){
       text.erase(text.length() - 1);
     }
