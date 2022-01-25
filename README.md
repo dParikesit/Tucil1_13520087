@@ -11,6 +11,7 @@
 * [Description](#description)
 * [Prerequisites](#prerequisites)
 * [How to Run](#how-to-run)
+* [Warning](#warning)
 * [Project Status](#project-status)
 * [Contributors](#contributors)
 
@@ -25,6 +26,10 @@
 ## How to Run
 > For linux user, open terminal in bin folder and do `./main`  
 > For windows user, double click `main.exe` inside bin folder
+
+## Warning
+> Tiap end line test file nya jangan ada tab atau white space
+> Contoh yang benar adalah pada folder test
 
 ## Project Status
 > **Project is: _complete_**
