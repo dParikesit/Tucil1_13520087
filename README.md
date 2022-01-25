@@ -28,7 +28,7 @@
 > For windows user, double click `main.exe` inside bin folder
 
 ## Warning
-> Tiap end line test file nya jangan ada tab atau white space
+> Tiap end line test file nya jangan ada tab atau white space  
 > Contoh yang benar adalah pada folder test
 
 ## Project Status
