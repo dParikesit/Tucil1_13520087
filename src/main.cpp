@@ -27,6 +27,10 @@ int main() {
   string text;
   bool space = false;
   while (getline(ifile, text)) {
+    if(text[text.length()-1]=='\r'){
+      text.erase(text.length() - 1);
+    }
+    
     // Output the text from the file
     if (space == false) {
       if (text.empty()) {
