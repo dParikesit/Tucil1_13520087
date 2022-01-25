@@ -1,8 +1,10 @@
+#include <string.h>
+
 #include <array>
+#include <chrono>
 #include <fstream>
 #include <iostream>
 #include <vector>
-#include <chrono>
 
 using namespace std;
 namespace sc = std::chrono;
@@ -14,8 +16,8 @@ int main() {
   // Buka file
   fstream ifile;
   string namafile;
-  cout<<"Masukkan nama file termasuk ekstensi: ";
-  cin>>namafile;
+  cout << "Masukkan nama file termasuk ekstensi: ";
+  cin >> namafile;
   ifile.open(namafile);
 
   // Masukkan puzzle dan kata ke vector
@@ -53,18 +55,18 @@ int main() {
     lineLen++;
   }
   // Jumlah baris puzzle
-  int line = raw.size()/(lineLen+1);
+  int line = raw.size() / (lineLen + 1);
 
   // Masukkan vector puzzle menjadi array yang terstruktur
   char character[line][lineLen];
   int counterJ = 0;
-  int counterI=0;
-  for(int i=0; i<raw.size(); i++){
-    if(raw[i]!='0'){
+  int counterI = 0;
+  for (int i = 0; i < raw.size(); i++) {
+    if (raw[i] != '0') {
       character[counterI][counterJ] = raw[i];
       counterJ++;
-      if(counterJ>(lineLen-1)){
-        counterJ=0;
+      if (counterJ > (lineLen - 1)) {
+        counterJ = 0;
         counterI++;
       }
     }
@@ -72,8 +74,8 @@ int main() {
 
   // Jalankan algoritma bruteforce
   // Buat struct untuk menyimpan letak ditemukannya kata
-  struct pos{
-    int baris,kolom,arah;
+  struct pos {
+    int baris, kolom, arah;
   } question[quest.size()];
   /* Pada arah,
   1 dari poros ke kiri atas
@@ -85,19 +87,23 @@ int main() {
   7 dari poros ke bawah
   8 dari poros ke kanan bawah
    */
-  
-  for(int x=0; x<quest.size(); x++){
-    char first=quest[x][0];
+
+  // Menyimpan apakah indeks tertentu merupakan jawaban atau tidak
+  int colored[line][lineLen];
+  memset(colored, 0, sizeof(colored[0][0]) * line * lineLen);
+  int currColor = 0;
+
+  for (int x = 0; x < quest.size(); x++) {
+    char first = quest[x][0];
     int questLen = quest[x].length();
-    question[x].baris=-1;
-    question[x].kolom=-1;
-    question[x].arah=-1;
+    question[x].baris = -1;
+    question[x].kolom = -1;
+    question[x].arah = -1;
 
     // Looping semua puzzle cari character yang sama
-    for(int i=0; i<line; i++){
-      for(int j=0; j<lineLen; j++){
-        cmpCount++;
-        if(question[x].arah==-1){
+    for (int i = 0; i < line; i++) {
+      for (int j = 0; j < lineLen; j++) {
+        if (question[x].arah == -1) {
           // Kalau ada character yang sama dicek lainnya
           cmpCount++;
           if (character[i][j] == first) {
@@ -121,14 +127,19 @@ int main() {
                 }
                 if (foundChar == true && progress == questLen - 1) {
                   foundWord = true;
-                  question[x].baris=i;
-                  question[x].kolom=j;
-                  question[x].arah=1;
+                  question[x].baris = i;
+                  question[x].kolom = j;
+                  question[x].arah = 1;
+                  for (int k = 0; k < questLen; k++) {
+                    colored[i - k][j - k] = (currColor % 6) + 31;
+                  }
+                  currColor++;
                 }
               }
             }
 
             // Cek arah 2 Atas
+            progress = 0;
             if (bisaAtas) {
               foundChar = true;
               while (foundWord == false && foundChar == true && progress < (questLen - 1)) {
@@ -142,11 +153,16 @@ int main() {
                   question[x].baris = i;
                   question[x].kolom = j;
                   question[x].arah = 2;
+                  for (int k = 0; k < questLen; k++) {
+                    colored[i - k][j] = (currColor % 6) + 31;
+                  }
+                  currColor++;
                 }
               }
             }
 
             // Cek arah 3 Kanan Atas
+            progress = 0;
             if (bisaKanan && bisaAtas) {
               foundChar = true;
               while (foundWord == false && foundChar == true && progress < (questLen - 1)) {
@@ -160,11 +176,16 @@ int main() {
                   question[x].baris = i;
                   question[x].kolom = j;
                   question[x].arah = 3;
+                  for (int k = 0; k < questLen; k++) {
+                    colored[i - k][j + k] = (currColor % 6) + 31;
+                  }
+                  currColor++;
                 }
               }
             }
 
             // Cek arah 4 Kiri
+            progress = 0;
             if (bisaKiri) {
               foundChar = true;
               while (foundWord == false && foundChar == true && progress < (questLen - 1)) {
@@ -178,11 +199,16 @@ int main() {
                   question[x].baris = i;
                   question[x].kolom = j;
                   question[x].arah = 4;
+                  for (int k = 0; k < questLen; k++) {
+                    colored[i][j - k] = (currColor % 6) + 31;
+                  }
+                  currColor++;
                 }
               }
             }
-            
+
             // Cek arah 5 Kanan
+            progress = 0;
             if (bisaKanan) {
               foundChar = true;
               while (foundWord == false && foundChar == true && progress < (questLen - 1)) {
@@ -196,11 +222,16 @@ int main() {
                   question[x].baris = i;
                   question[x].kolom = j;
                   question[x].arah = 5;
+                  for (int k = 0; k < questLen; k++) {
+                    colored[i][j + k] = (currColor % 6) + 31;
+                  }
+                  currColor++;
                 }
               }
             }
-            
+
             // Cek arah 6 Kiri Bawah
+            progress = 0;
             if (bisaKiri && bisaBawah) {
               foundChar = true;
               while (foundWord == false && foundChar == true && progress < (questLen - 1)) {
@@ -214,11 +245,16 @@ int main() {
                   question[x].baris = i;
                   question[x].kolom = j;
                   question[x].arah = 6;
+                  for (int k = 0; k < questLen; k++) {
+                    colored[i + k][j - k] = (currColor % 6) + 31;
+                  }
+                  currColor++;
                 }
               }
             }
-            
+
             // Cek arah 7 Bawah
+            progress = 0;
             if (bisaBawah) {
               foundChar = true;
               while (foundWord == false && foundChar == true && progress < (questLen - 1)) {
@@ -232,11 +268,16 @@ int main() {
                   question[x].baris = i;
                   question[x].kolom = j;
                   question[x].arah = 7;
+                  for (int k = 0; k < questLen; k++) {
+                    colored[i + k][j] = (currColor % 6) + 31;
+                  }
+                  currColor++;
                 }
               }
             }
-            
+
             // Cek arah 8 Kanan Bawah
+            progress = 0;
             if (bisaKanan && bisaBawah) {
               foundChar = true;
               while (foundWord == false && foundChar == true && progress < (questLen - 1)) {
@@ -250,6 +291,10 @@ int main() {
                   question[x].baris = i;
                   question[x].kolom = j;
                   question[x].arah = 8;
+                  for (int k = 0; k < questLen; k++) {
+                    colored[i + k][j + k] = (currColor % 6) + 31;
+                  }
+                  currColor++;
                 }
               }
             }
@@ -259,72 +304,16 @@ int main() {
     }
   }
 
-  for(int x=0; x<quest.size(); x++){
-    if(question[x].arah==-1){
-      std::cout<<"Kata tidak ditemukan"<<endl<<endl;
-    } else{
-      int questLen = quest[x].length();
-      char output[line][lineLen];
-      for(int i=0; i<line; i++){
-        for(int j=0; j<lineLen; j++){
-          output[i][j] = '-';
-        }
+  for (int i = 0; i < line; i++) {
+    for (int j = 0; j < lineLen; j++) {
+      if (colored[i][j] != 0) {
+        cout << "\033[1m\033[" + to_string(colored[i][j]) + "m" << character[i][j] << "\033[0m";
+        cout << " ";
+      } else {
+        cout << character[i][j] << " ";
       }
-
-      if(question[x].arah==1){
-        // Kiri atas
-        for(int k=0; k<questLen; k++){
-          output[question[x].baris - k][question[x].kolom - k] = quest[x][k];
-        }
-      } else if(question[x].arah==2){
-        // Atas
-        for (int k = 0; k < questLen; k++) {
-          output[question[x].baris - k][question[x].kolom] = quest[x][k];
-        }
-      } else if (question[x].arah == 3) {
-        // Kanan atas
-        for (int k = 0; k < questLen; k++) {
-          output[question[x].baris - k][question[x].kolom + k] = quest[x][k];
-        }
-      } else if (question[x].arah == 4) {
-        // Kiri
-        for (int k = 0; k < questLen; k++) {
-          output[question[x].baris][question[x].kolom - k] = quest[x][k];
-        }
-      } else if (question[x].arah == 5) {
-        // Kanan
-        for (int k = 0; k < questLen; k++) {
-          output[question[x].baris][question[x].kolom + k] = quest[x][k];
-        }
-      } else if (question[x].arah == 6) {
-        // Kiri bawah
-        for (int k = 0; k < questLen; k++) {
-          output[question[x].baris + k][question[x].kolom - k] = quest[x][k];
-        }
-      } else if (question[x].arah == 7) {
-        // Bawah
-        for (int k = 0; k < questLen; k++) {
-          output[question[x].baris + k][question[x].kolom] = quest[x][k];
-        }
-      } else if (question[x].arah == 8) {
-        // Kanan Bawah
-        for (int k = 0; k < questLen; k++) {
-          output[question[x].baris + k][question[x].kolom + k] = quest[x][k];
-        }
-      }
-
-      for(int i=0; i<line; i++){
-        for(int j=0; j<lineLen; j++){
-          if(j==lineLen-1){
-            std::cout<<output[i][j]<<endl;
-          } else{
-            std::cout<<output[i][j]<<" ";
-          }
-        }
-      }
-
-      std::cout<<endl;
     }
+    cout << endl;
   }
 
   auto end = sc::high_resolution_clock::now();
