@@ -33,7 +33,7 @@ int main() {
         space = true;
       } else {
         for (int i = 0; i < text.length(); i++) {
-          if (text[i] != ' ') {
+          if (text[i] >= 'A' && text[i] <= 'Z') {
             raw.push_back(text[i]);
           }
         }
