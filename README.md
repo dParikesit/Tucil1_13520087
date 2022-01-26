@@ -10,6 +10,7 @@
 ## Table of Contents
 * [Description](#description)
 * [Prerequisites](#prerequisites)
+* [How to Compile](#how-to-compile)
 * [How to Run](#how-to-run)
 * [Warning](#warning)
 * [Project Status](#project-status)
@@ -22,6 +23,9 @@
 ## Prerequisites
 > Untuk pengguna Linux, pastikan pc memiliki library dasar c++ (atau dengan menginstall gcc dsb)  
 > Untuk pengguna Windows, pastikan pc memiliki library dasar c++ (atau dengan menginstall MinGW64) 
+
+## How to Compile
+> `g++ src/main.cpp -o bin/main`
 
 ## How to Run
 > For linux user, open terminal in bin folder and do `./main`  
